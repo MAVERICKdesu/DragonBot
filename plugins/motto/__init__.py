@@ -7,21 +7,21 @@ import random
 @on_command('motto', only_to_me=False, aliases=('语录','名言警句',))
 async def motto(session: CommandSession):
     file1 = 'motto\\'
-    long_path = 'C:\\Code\\CQP-xiaoi\\酷Q Pro\\data\\image\\'+file1
+    long_path = 'E:\\MyFiles\\web\\gohttp\\data\\images\\bot\\'+file1
     things = await get_content(long_path)
     times = random.randint(0, len(things)-1)
-    print('[CQ:image,file=motto\\'+things[times][42:]+']')
-    await session.send('[CQ:image,file=motto\\'+things[times][42:]+']')
+    ##print('[CQ:image,file=motto\\'+things[times][42:]+']')
+    await session.send('[CQ:image,file='+things[times][33:]+']')
 
 
 @on_command('moremotto', only_to_me=False, aliases=('语录十连',))
 async def moremotto(session: CommandSession):
-    file1 = 'motto\\\\'
-    long_path = 'C:\\Code\\CQP-xiaoi\\酷Q Pro\\data\\' + 'image\\\\'+file1
+    file1 = 'motto\\'
+    long_path = 'E:\\MyFiles\\web\\gohttp\\data\\images\\bot\\'+file1
     things = await get_content(long_path)
     time1 = [ random.randint(0, len(things)-1) for i in range(10)]
     for times in time1:
-        await session.send('[CQ:image,file=motto\\'+things[times][42:]+']')
+        await session.send('[CQ:image,file='+things[times][33:]+']')
 
 
 async def get_content(path):

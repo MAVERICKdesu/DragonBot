@@ -15,7 +15,7 @@ async def upload(session: CommandSession):
     if not session.is_first_run:
         if session.current_arg != '结束':
             url = session.current_arg_images
-            urlup(session.current_arg[15:51], url[0], 'dragon')
+            urlup(session.current_arg.split(',')[1][6:], url[0], 'dragon')
             session.pause('继续')
     if not ph:
         session.pause('不能为空呢，重新输入')
@@ -31,7 +31,7 @@ async def uploadmotto(session: CommandSession):
     if not session.is_first_run:
         if session.current_arg != '结束':
             url = session.current_arg_images
-            urlup(session.current_arg[15:51], url[0], 'motto')
+            urlup(session.current_arg.split(',')[1][6:], url[0], 'motto')
             session.pause('继续')
     if not ph:
         session.pause('不能为空呢，重新输入')
