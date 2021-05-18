@@ -4,8 +4,8 @@ import requests
 
 def upup(address, n):
     list1 = ['dragon','motto']
-    path = 'E:\\MyFiles\\web\\gohttp\\data\\images\\'+address
-    path2 = 'E:\\MyFiles\\web\\gohttp\\data\\images\\bot\\'+list1[n]+'\\'
+    path = 'C:\\dragonbot\\gohttp\\data\\images\\'+address
+    path2 = 'C:\\dragonbot\\gohttp\\data\\images\\bot\\'+list1[n]+'\\'
     url = ''
     with open(path,'r') as f:
         line = f.readline()  # 调用文件的 readline()方法
@@ -26,7 +26,7 @@ def upup(address, n):
 
 
 def urlup(address,url,text):
-    path2 = 'E:\\MyFiles\\web\\gohttp\\data\\images\\bot\\'+text+'\\'
+    path2 = 'C:\\dragonbot\\gohttp\\data\\images\\bot\\'+text+'\\'
     headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"}
     cont=requests.get(url=url,headers=headers)
     print(cont.headers["Content-Type"])

@@ -6,12 +6,13 @@ from nonebot import on_natural_language, NLPSession, IntentCommand
 from .sound_data import get_filelist
 import random
 import datetime
+import os
 
 
 @on_command('sound', only_to_me=False, aliases=('声音',))
 async def sound(session: CommandSession):
-    file1 = 'sound\\\\'
-    long_path = 'C:\\Code\\CQP-xiaoi\\酷Q Pro\\data\\record\\' + file1
+    file1 = 'sound\\'
+    long_path = 'C:\\dragonbot\\gohttp\\data\\voices\\' + file1
     things = await get_content(long_path)
     times = random.randint(0, len(things) - 1)
     await session.send('[CQ:record,file=' + things[times].replace(long_path, file1) + ']')
@@ -19,10 +20,12 @@ async def sound(session: CommandSession):
 
 @on_command('clock', only_to_me=False, aliases=('报时','时间',))
 async def sound(session: CommandSession):
-    hour = str(eval(datetime.datetime.now().strftime('%H')))
+    hour = str(int(datetime.datetime.now().strftime('%H')))
     if hour =='0':
         hour='24'
-    file1 = 'clock\\' + hour + '.wav'
+    hour+=".wav"
+    file1 = os.path.join("clock",hour)
+    #file1 = "1.wav"
     await session.send('[CQ:record,file=' + file1 + ']')
 
 
