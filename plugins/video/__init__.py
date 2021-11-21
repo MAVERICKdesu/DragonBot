@@ -3,15 +3,15 @@ from nonebot import on_command, CommandSession
 import os
 from nonebot import on_natural_language, NLPSession, IntentCommand
 
-@on_command('video', only_to_me=False, aliases=('点播',))
+@on_command('video', only_to_me=False, aliases=())
 async def music(session: CommandSession):
-    dir = "C:/dragonbot/gohttp/data/videos/upload"
+    dir = os.path.join(session.bot.config.SCORCE_VIDEO_PATH, "upload")
     pos = session.current_arg_text
     text = "输入视频名称进行点播：\n"
     if pos == "":
         for s in os.listdir(dir):
             if s[-3:]!="jpg":
-                text=text+s+"\n"
+                text = text + s + "\n"
         pos = session.get('pos', prompt=text)
     await session.send("[CQ:video,file=upload/" + pos + ']')
 

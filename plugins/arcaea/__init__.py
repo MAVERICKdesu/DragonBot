@@ -3,7 +3,8 @@ from nonebot import on_natural_language, NLPSession, IntentCommand
 from Arcapi import AsyncApi,SyncApi
 import random
 import time
-import asyncio
+
+from pkg_resources import SOURCE_DIST
 from . import query
 
 @on_command('arcaea', only_to_me=False, aliases=('/arc',))

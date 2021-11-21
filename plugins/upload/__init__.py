@@ -1,40 +1,28 @@
-#!/usr/bin/env python
-# encoding: utf-8
-
+from os import path
 import nonebot
 from nonebot import on_command, CommandSession
 from nonebot import on_natural_language, NLPSession, IntentCommand
-from .photo_upload import upup,urlup
+
+from tools.fileTools import download_img_and_save
+from tools.ctxTools import get_all_img_url, is_group
 
 
-@on_command('upload', only_to_me=False, aliases=('上传图片',))
+@on_command('upload', only_to_me=False, aliases=('上传图片', '上传语录'))
 async def upload(session: CommandSession):
-    ph = session.current_arg_text.strip()
-    session.state[session.current_key] = ph
-    ph = session.get('ph', prompt='发送要上传的图片')
-    if not session.is_first_run:
-        if session.current_arg != '结束':
-            url = session.current_arg_images
-            urlup(session.current_arg.split(',')[1][6:], url[0], 'dragon', session.ctx["group_id"])
-            session.pause('继续')
-    if not ph:
-        session.pause('不能为空呢，重新输入')
+    if session.is_first_run:
+        group, id = is_group(session.ctx)
+        upload_folder = ''
+        if "图片" in session.event.raw_message:
+            upload_folder = "dragon"
+        elif "语录" in session.event.raw_message:
+            upload_folder = "motto"
+        session.state['folder'] = upload_folder
+        session.state['id'] = str(id)
+        session.state['group'] = group
+    session.get('', prompt='发送要上传的图片')
+    if session.current_arg != '结束':
+        all_img_url = get_all_img_url(session.ctx)
+        for url in all_img_url:
+            download_img_and_save(session.bot.config.SCORCE_IMG_PATH, session.state['folder'], url, session.state['id'], session.state['group'])
+        session.pause('继续')
     await session.send('就这？')
-
-
-
-@on_command('uploadmotto', only_to_me=False, aliases=('上传语录',))
-async def uploadmotto(session: CommandSession):
-    ph = session.current_arg_text.strip()
-    session.state[session.current_key] = ph
-    ph = session.get('ph', prompt='发送要上传的图片')
-    if not session.is_first_run:
-        if session.current_arg != '结束':
-            url = session.current_arg_images
-            urlup(session.current_arg.split(',')[1][6:], url[0], 'motto', session.ctx["group_id"])
-            session.pause('继续')
-    if not ph:
-        session.pause('不能为空呢，重新输入')
-    await session.send('就这？')
-
-

@@ -19,10 +19,10 @@ async def upload(session: CommandSession):
                  'appid':'20200702000511073',
                  'secretKey':'SultFhmzwQQfkCGLW3aW'}
         salt = str(random.randint(32768,65536))
-        sign = quest['appid']+quest['q']+salt+quest['secretKey']
+        sign = quest['appid'] + quest['q'] + salt + quest['secretKey']
         sign = hashlib.md5(sign.encode()).hexdigest()
         url = '/api/trans/vip/translate'
-        myurl = url+'?appid='+quest['appid']+'&q='+urllib.parse.quote(quest['q'])+'&from='+quest['from']+'&to='+quest['to']+'&salt=' + salt+ '&sign='+sign
+        myurl = url + f"?appid={quest['appid']}&q={urllib.parse.quote(quest['q'])}&from={quest['from']}&to={quest['to']}&salt={salt}&sign={sign}"
         httpClient = http.client.HTTPConnection('api.fanyi.baidu.com')
         httpClient.request('GET',myurl)
         response = httpClient.getresponse()

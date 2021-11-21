@@ -1,4 +1,5 @@
-from nonebot import on_command, CommandSession
+from nonebot import on_command, CommandSession, session
+from config import PLUGINS_PATH
 from src.libraries.tool import hash
 from src.libraries.maimaidx_music import *
 from src.libraries.image import *
@@ -6,14 +7,15 @@ from src.libraries.maimai_best_40 import generate,computeRa
 from collections import defaultdict
 from nonebot import on_natural_language, NLPSession, IntentCommand
 import re
+import os
 
 
-def song_txt(music: Music):
+def song_txt(music: Music, mess = ''):
     return ([
         {
             "type": "text",
             "data": {
-                "text": f"{music.id}. {music.title}\n"
+                "text": f"{mess}{music.id}. {music.title}\n"
             }
         },
         {
@@ -173,7 +175,7 @@ BREAK: {chart['notes'][4]}
             await session.send("未找到该乐曲")
 
 music_aliases = defaultdict(list)
-f = open('C:/dragonbot/Code/DragonBot/plugins/maimai/src/static/aliases.csv', 'r', encoding='utf-8')
+f = open(os.path.join(PLUGINS_PATH, 'maimai/src/static/aliases.csv'), 'r', encoding='utf-8')
 tmp = f.readlines()
 f.close()
 for t in tmp:
@@ -193,8 +195,7 @@ async def find_song(session: CommandSession):
     result_set = music_aliases[name]
     if len(result_set) == 1:
         music = total_list.by_title(result_set[0])
-        await session.send("您要找的是不是")
-        await session.send(song_txt(music))
+        await session.send(song_txt(music, "您要找的是不是\n"))
     else:
         s = '\n'.join(result_set)
         await find_song.finish(f"您要找的可能是以下歌曲中的其中一首：\n{ s }")
@@ -217,12 +218,10 @@ async def maitoday(session: CommandSession):
             s += f'宜 {wm_list[i]}\n'
         elif wm_value[i] == 0:
             s += f'忌 {wm_list[i]}\n'
-    s += "G11提醒您：打机时不要大力拍打或滑动哦\n今日推荐歌曲："
+    s += "G11提醒您：打机时不要大力拍打或滑动哦\n今日推荐歌曲：\n"
     music = total_list[h % len(total_list)]
-    await session.send(s)
-    await session.send(song_txt(music))
+    await session.send(song_txt(music, s))
 
-#https://www.diving-fish.com/api/maimaidxprober/player/records
 @on_command('all_songs', only_to_me=False, aliases={})
 async def all_songs(session: CommandSession):
     username = ""
@@ -242,21 +241,16 @@ async def best_40_pic(session: CommandSession):
     if session.current_arg_text[0:3] != "b40":
         return
     if len(session.current_arg_text) > 4:
-        username = session.current_arg_text[4:]
-    print(username, session.ctx.sender['user_id'])
-    if username == "":
-        payload = {'qq': session.ctx.sender['user_id']}
-    else:
-        payload = {'username': username}
+        username = session.current_arg_text[3:].strip()
+    payload = {'qq': session.ctx.sender['user_id']} if username == "" else {'username': username}
     img, success = await generate(payload)
     if success == 400:
         await session.send("未找到此玩家，请确保此玩家的用户名和查分器中的用户名相同。https://www.diving-fish.com/maimaidx/prober/")
     elif success == 403:
         await session.send("该用户禁止了其他人获取数据。")
     else:
-        name = 'C:/dragonbot/gohttp/data/images/maiuser/'+str(session.ctx.sender['user_id'])+'.png'
+        name = os.path.join(session.bot.config.SCORCE_IMG_PATH, 'maiuser', str(session.ctx.sender['user_id']) + '.png')
         img.save(name)
-        print("[CQ:image,file=maiuser/"+str(session.ctx.sender['user_id'])+".png]")
         await session.send("[CQ:image,file=maiuser/"+str(session.ctx.sender['user_id'])+".png]")
 
 
@@ -323,11 +317,7 @@ async def search_music(session: CommandSession):
         search_result = ""
         for music in sorted(res, key = lambda i: int(i['id'])):
             search_result += f"{music['id']}. {music['title']}\n"
-        await session.send([
-            {"type": "text",
-                "data": {
-                    "text": search_result.strip()
-                }}])
+        await session.send(search_result.strip())
     else:
         await session.send(f"结果过多（{len(res)} 条），请缩小查询范围。")
 

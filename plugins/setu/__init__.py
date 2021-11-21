@@ -1,16 +1,16 @@
-#!/usr/bin/env python
-# encoding: utf-8
-
+from os import path
 import aiohttp
 from nonebot import on_command, CommandSession
 from nonebot import on_natural_language, NLPSession, IntentCommand
 import requests
 import time
 
+from tools.accessTools import get_switch_value
+
 ## 来张***的setu / 多来点***的setu / 来张
 @on_command('setu', only_to_me=False, aliases=('setu',))
 async def setu(session: CommandSession):
-    if (session.ctx["group_id"]==499370590) | (session.ctx["group_id"]==1011932325) | (session.ctx["group_id"]==518109542)|(session.ctx["group_id"]==808101599)|(session.ctx["group_id"]==710571018):
+    if not get_switch_value(session.ctx, "setu"):
         return
     parmas = {'r18':'0','keyword':'','num':'1','proxy':'i.pixiv.cat','size1200':'false'}
     if 'r18' in session.current_arg_text:
@@ -35,30 +35,23 @@ async def setu(session: CommandSession):
     res = requests.get(url)
     dic1 = res.content.decode("utf-8").replace('null', '"null"').replace("false","0").replace("true","0")
     dic = eval(dic1)
-    print(parmas)
-    print(dic)
     if dic['code'] == 404:
-        await session.send("没有找到相应的setu哟")#[CQ:image,file=sorry.png]")
-        print("over")
+        await session.send("没有找到相应的setu哟")
         return
     data = dic["data"][0]
     t = str(int(time.time())) + data['url'][-4:]
-    #cont = requests.get(data['url'])
     cont = 0
     async with aiohttp.ClientSession() as sess:
         async with sess.get(data['url']) as resp:
             if resp.status == 200:
-                with open('C:\\dragonbot\\gohttp\\data\\images\\bot\\dragon\\' + t, 'wb+') as f2:
+                with open(path.join(session.bot.config.SCORCE_IMG_PATH, 'dragon', t), 'wb+') as f2:
                     cont = await resp.content.read()
                     f2.write(cont)
             else:
                 await session.send("图片获取失败，请稍后重试")
                 return
-            #cont=resp
 
-    ret ="[CQ:at,qq=" + str(session.ctx.sender['user_id']) + "]\npid:" + str(data['pid']) + "\nuid:" + str(
-        data['uid']) + "\ntitle:" + data['title'] + "\nauthor:" + data['author'] + "\nurl:" + data[
-              'url']+"[CQ:image,file=" + "bot\\dragon\\" + t + "]"
+    ret = f"[CQ:at,qq={str(session.ctx.sender['user_id'])}]\npid:{str(data['pid'])}\nuid:{str(data['uid'])}\ntitle:{data['title']}\nauthor:{data['author']}\nurl:{data['url']}[CQ:image,file=dragon/{t}]"
     await session.send(ret)
 
 
