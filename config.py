@@ -8,7 +8,7 @@ COMMAND_START = {'', '/', '!', '／', '！'}
 HOST = '0.0.0.0'
 PORT = 8080
 
-SCORCE_IMG_PATH = "E:/MyFiles/web/gohttp/data/images/"
-SCORCE_VOICE_PATH = "E:/MyFiles/web/gohttp/data/voices/"
-SCORCE_VIDEO_PATH = "E:/MyFiles/web/gohttp/data/videos/"
-PLUGINS_PATH = "E:/MyFiles/Code/DragonBot/plugins/"
+SCORCE_IMG_PATH = "images/"
+SCORCE_VOICE_PATH = "voices/"
+SCORCE_VIDEO_PATH = "videos/"
+PLUGINS_PATH = "plugins/"
