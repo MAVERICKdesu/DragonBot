@@ -5,11 +5,11 @@
 
 
 ### 怎样使用？
+首先你需要一个支持CQHTTP协议的无头客户端，推荐使用的是[go-cqhttp](https://docs.go-cqhttp.org/)
 
-首先你需要配置NoneBot的运行环境，[点击这里](https://docs.nonebot.dev/guide/)访问NoneBot的指南；
+然后你需要配置NoneBot的运行环境，[点击这里](https://docs.nonebot.dev/guide/)访问NoneBot的指南
 
-然后Clone项目，修改config.py的有PATH后缀的参数。填入你的无头客户端保存图片，视频和语音的路径，以及当前项目的plugins文件夹的项目
-
+接下来Clone项目，修改config.py的有PATH后缀的参数。填入你的无头客户端保存图片，视频和语音的路径，以及当前项目的plugins文件夹的项目
 
 运行main.py即可
 
