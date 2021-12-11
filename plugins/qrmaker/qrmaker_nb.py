@@ -46,9 +46,9 @@ def get_set(arrs):
         else:
             index += 1
             continue
-    if not re_result[2] or re_result[2] not in range(0,1):
+    if not re_result[2] or (re_result[2] * 10) not in range(0, 11):
         re_result[2] = 1.0
-    if not re_result[3] or re_result[3] not in range(0,1):
+    if not re_result[3] or (re_result[3] * 10) not in range(0, 11):
         re_result[3] = 1.0
         
     return re_result
