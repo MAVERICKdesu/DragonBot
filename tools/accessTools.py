@@ -5,29 +5,7 @@ from aiocqhttp.event import Event
 from tools.ctxTools import is_group
 
 
-FUNCTION_SWITCH = {
-    "dragon": {
-        "allon": False,
-        "on": {
-            "users": [714650324],
-            "group": [518109542, 135720324, 715620136],
-        }
-    },
-    "motto": {
-        "allon": True,
-        "on": {
-            "users": [714650324],
-            "group": [518109542],
-        }
-    },
-    "setu": {
-        "allon": False,
-        "on": {
-            "users": [714650324],
-            "group": [518109542, 135720324, 715620136],
-        }
-    }
-}
+FUNCTION_SWITCH = {}
 
 
 def get_switch_value(event:Event, funName: str) -> bool:
