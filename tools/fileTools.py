@@ -31,9 +31,6 @@ def download_img_and_save(base_path, folder, url, id, is_group):
     if folder == "dragon":
         save_path = path.join(base_path, folder)
 
-    if is_group and id in [135720324, 715620136]:
-        folder = path.join(base_path, folder, "group", "main")
-
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"}
     cont = requests.get(url=url,headers=headers)
     t = str(int(time.time())) + "." + cont.headers["Content-Type"].split("/")[1]
