@@ -14,8 +14,6 @@ import time
 async def motto(session: CommandSession):
     group, id = is_group(session.ctx)
     folder = path.join("motto", "group" if group else "user", str(id))
-    if group and id in [135720324, 715620136]:
-        folder = path.join("motto", "group", "main")
 
     motto_path = path.join(session.bot.config.SCORCE_IMG_PATH, folder)
     things = await get_content(motto_path)
