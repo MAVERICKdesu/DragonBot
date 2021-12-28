@@ -1,6 +1,6 @@
 import os, asyncio, requests
 from .qrcode_maker import qrcode
-from PIL import Image
+from PIL import Image, ImageSequence
 from io import BytesIO
 import nonebot
 from nonebot import on_command
@@ -58,12 +58,23 @@ def get_set(arrs):
 def save_img(url):
     response = requests.get(url, headers=headers)
     image = Image.open(BytesIO(response.content))
+    info = image.info
     try:
-        image_type = 'gif' if image.n_frames >= 1 and image.n_frames <= 200 else 'png'  #帧数过多处理过满
+        image_type = 'gif' if image.n_frames > 1 and image.n_frames <= 200 else 'png'  #帧数过多处理过慢
     except:
         image_type = 'png'
-    image.save(os.path.join(os.path.dirname(__file__), f'temp.{image_type}'))
-    picture = os.path.join(os.path.dirname(__file__), f'temp.{image_type}')
+    picture = os.path.join(os.path.dirname(__file__), f'temp.{image_type}')  # 这个是合成以下刚刚的那个path 其实可以先合成再save的（小声）
+    # amzqr和MyQR都是从本地读取图片，提供的图片也是本地存储位置而不是Image.open的图片，所有要先保存到本地
+    if image_type == 'gif':
+        # gif保存
+        frames = [f.copy() for f in ImageSequence.Iterator(image)]
+        frames[0].save(picture, format='GIF', save_all=True,
+                       append_images=frames[1:], disposal=2,
+                       quality=80, **info)
+    else:
+        # png保存
+        image.save(os.path.join(os.path.dirname(__file__),
+                                f'temp.{image_type}'))
     return picture, image_type
 
 @on_command('qrmaker', only_to_me=False, aliases=('!qr'))
